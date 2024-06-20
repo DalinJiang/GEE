@@ -1,0 +1,41 @@
+// this code is to download air temperature in study area from ERA5 
+//
+// Dalin Jiang, University of Stirling, UK
+// 20 June 2024
+// =============================================================================================
+
+//import study area shape file
+var catchment = ee.FeatureCollection("users/dalin/Qadisiyah_catchment_WGS84");
+
+// plot study area on map
+Map.addLayer(catchment);
+
+// Import ERA5 image collection.
+var era5 = ee.ImageCollection('ECMWF/ERA5/MONTHLY');
+
+var dateRange = ee.DateRange('2000-01-01', '2020-12-31');
+
+// Filter the data collection to include only images intersecting the desired
+// date range.
+var era5date = era5.filterDate(dateRange);
+
+// Select only the monthly air temperature data band.
+var airtemp = era5date.select('mean_2m_air_temperature');
+
+//
+//-----get the number of images------
+var n=era5date.size().getInfo();
+print(n);
+
+
+// plot time series
+var tsx = ui.Chart.image.series({
+  imageCollection: airtemp,
+  region: catchment,
+  reducer: ee.Reducer.mean(),
+  scale: 27830,      
+  xProperty: 'system:time_start'})
+  .setOptions({
+     title: '2 m Air Temperature Time Series',
+     vAxis: {title: 'Mean Air Temperature K'}});
+print(tsx);

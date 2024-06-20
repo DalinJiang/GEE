@@ -1,0 +1,38 @@
+#
+# this download is done using geemap package in python, because it is easier for batch download
+# this code is run in Jupyter Notebook
+# 
+# Dalin Jiang, University of Stirling, UK
+# 20 June 2024
+# =============================================================================================
+
+# import the packages
+import ee
+import os
+import geemap
+
+# show the map
+m = geemap.Map()
+m
+
+# import the study area shape file
+roi = ee.FeatureCollection('users/dalin/Qadisiyah_catchment_WGS84')
+m.addLayer(roi)
+
+# import and filter the data
+img_ss = ee.ImageCollection("MODIS/061/MCD12Q1").filterBounds(roi).filterDate('2000-01-01','2020-12-31').select(['LC_Type2'])
+img_ss.size().getInfo()
+
+
+# crop the images
+def crop_img(img):
+    return img.clip(roi.geometry())
+
+agg_img = img_ss.map(crop_img)
+
+agg_img.aggregate_array('system:index')
+# ee.Image.bandNames(img_ss.first())
+
+# export the images
+out_folder = 'Land_cover'
+geemap.ee_export_image_collection_to_drive(agg_img,folder=out_folder,region=roi.geometry(), scale=500, crs='EPSG:4326')

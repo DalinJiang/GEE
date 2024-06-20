@@ -1,0 +1,49 @@
+// this code is to download land surface temperature in study area from MODIS product 
+//
+// Dalin Jiang, University of Stirling, UK
+// 20 June 2024
+// =============================================================================================
+
+// import study area shape file
+var catchment = ee.FeatureCollection("users/dalin/Qadisiyah_catchment_WGS84");
+
+// add study area on map
+Map.addLayer(catchment);
+
+// Import LST image collection.
+var modis = ee.ImageCollection("MODIS/006/MOD11A1");
+
+var dateRange = ee.DateRange('2000-01-01', '2020-12-31');
+
+// Filter the LST collection to include only images intersecting the desired
+// date range.
+var mod11a1 = modis.filterDate(dateRange);
+
+// Select only the 1km day LST data band.
+var modLSTday = mod11a1.select('LST_Day_1km');
+
+//
+// Scale to Kelvin and convert to Celsius, set image acquisition time.
+var modLSTc = modLSTday.map(function(img){
+  return img
+    .multiply(0.02)
+    .subtract(273.15)
+    .copyProperties(img, ['system:time_start']);
+});
+
+//-----get the number of images------
+//var n=modLSTday.size().getInfo()
+//print(n)
+
+
+// plot time series
+var tsx = ui.Chart.image.series({
+  imageCollection: modLSTc,
+  region: catchment,
+  reducer: ee.Reducer.mean(),
+  scale: 1000,      //1000 means the spatial resolution
+  xProperty: 'system:time_start'})
+  .setOptions({
+     title: 'LST Time Series',
+     vAxis: {title: 'LST Celsius'}});
+print(tsx);

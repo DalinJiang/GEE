@@ -1,0 +1,42 @@
+// this code is to download precipitation in study area from ERA5 
+//
+// Dalin Jiang, University of Stirling, UK
+// 20 June 2024
+// =============================================================================================
+
+
+//import study area shape file
+var catchment = ee.FeatureCollection("users/dalin/Qadisiyah_catchment_WGS84");
+
+// plot study area on map
+Map.addLayer(catchment);
+
+// Import ERA5 image collection.
+var era5 = ee.ImageCollection('ECMWF/ERA5/MONTHLY');
+
+var dateRange = ee.DateRange('2000-01-01', '2020-12-31');
+
+// Filter the data collection to include only images intersecting the desired
+// date range.
+var era5date = era5.filterDate(dateRange);
+
+// Select only the monthly total precipitation data band.
+var Tprecip = era5date.select('total_precipitation');
+
+//
+//-----get the number of images------
+var n=era5date.size().getInfo();
+print(n);
+
+
+// plot time series
+var tsx = ui.Chart.image.series({
+  imageCollection: Tprecip,
+  region: catchment,
+  reducer: ee.Reducer.mean(),
+  scale: 27830,      
+  xProperty: 'system:time_start'})
+  .setOptions({
+     title: 'Monthly Total Precipitation Time Series',
+     vAxis: {title: 'Total Precipitation m'}});
+print(tsx);
