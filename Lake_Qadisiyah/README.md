@@ -1,6 +1,6 @@
 # Read me
-## This folder include some code for downloading data from GEE: 
-1. ERA5 (JavaScript)
+## This folder include some simple code for downloading data from GEE: 
+1. ERA5: air temperature, precipitation, wind speed (JavaScript)
 2. land surface temperature(JavaScript)
 3. NDVI(JavaScript)
 4. land use land cover(Python)
