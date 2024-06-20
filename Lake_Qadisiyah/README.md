@@ -11,5 +11,5 @@
 ![image](https://github.com/DalinJiang/GEE/assets/117453464/f444d80c-96f9-4059-9853-27d443ee4c21)
 
 
-### reference
+## Reference
 Dalin Jiang et al (2024). Impacts of La Niña and human activities on water quantity and quality: remote sensing observations of Lake Qadisiyah, Iraq
