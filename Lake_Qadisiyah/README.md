@@ -12,4 +12,4 @@
 
 
 ## Reference
-Dalin Jiang et al (2024). Impacts of La Niña and human activities on water quantity and quality: remote sensing observations of Lake Qadisiyah, Iraq
+Dalin Jiang et al. (2024). Impacts of droughts and human activities on water quantity and quality: remote sensing observations of Lake Qadisiyah, Iraq. (under review)
